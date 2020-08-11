@@ -64,15 +64,15 @@ if (conf.GOOGLE_OAUTH_CLIENT_ID && conf.GOOGLE_OAUTH_CLIENT_SECRET) {
 }
 
 if (conf.GITHUB_OAUTH_CLIENT_ID && conf.GITHUB_OAUTH_CLIENT_SECRET) {
-passport.use(new GitHubStrategy({
+  passport.use(new GitHubStrategy({
     clientID: conf.GITHUB_OAUTH_CLIENT_ID,
     clientSecret: conf.GITHUB_OAUTH_CLIENT_SECRET,
     callbackURL: '/api/auth/github/callback'
-  },  async (accessToken, refreshToken, profile, done) => {
+  }, async (accessToken, refreshToken, profile, done) => {
     try {
       const { id: githubId, emails } = profile
       const email = emails[0].value
-      
+
       let user
       try {
         user = await userService.findByEmail(email)
@@ -97,7 +97,7 @@ passport.use(new GitHubStrategy({
       return done(err, false)
     }
   }
-));
+  ))
 }
 
 const oAuthHandler = async (req, res, next) => {
