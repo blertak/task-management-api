@@ -78,7 +78,7 @@ class TaskService {
 
   /**
    * @param {object} query
-   * @returns {Promise<number>}
+   * @returns {Promise<boolean>}
    */
   async deleteTask (query) {
     const res = await TaskModel.deleteOne(query)

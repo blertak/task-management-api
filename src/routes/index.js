@@ -4,6 +4,7 @@ const router = require('express').Router()
 const httpStatus = require('http-status-codes')
 const AuthController = require('../controllers/AuthController')
 const TaskController = require('../controllers/TaskController')
+const AdminController = require('../controllers/AdminController')
 const config = require('../config')
 
 const { passport, authHandler } = require('../middlewares/auth')
@@ -12,6 +13,7 @@ const logger = require('../helpers/logger')
 
 const authController = new AuthController()
 const taskController = new TaskController()
+const adminController = new AdminController()
 
 router.post('/api/auth/login', authController.login.bind(authController))
 router.post('/api/auth/register/admin', authController.registerAdmin.bind(authController))
@@ -28,6 +30,8 @@ router.get('/api/auth/github/callback',
   (req, res) => {
     res.redirect(`${config.OAUTH_REDIRECT_URL}/?oauthToken=${req.user.oauthToken}`)
   })
+router.get('/api/auth/info', authHandler, authController.userInfo.bind(authController))
+
 router.post('/api/tasks',
   authHandler,
   taskController.createTask.bind(taskController)
@@ -52,14 +56,32 @@ router.get('/api/tasks',
   authHandler,
   taskController.listTasks.bind(taskController)
 )
-router.get('/api/auth/info/admin',
+
+router.get('/api/admin/users/:id',
   authHandler,
   rolesMiddleware(['admin']),
-  authController.userInfo.bind(authController)
+  adminController.findUser.bind(adminController)
 )
-router.get('/api/auth/info', authHandler, authController.userInfo.bind(authController))
-
-// router.get('/api/admin/users', authHandler, rolesMiddleware['admin'], ...)
+router.get('/api/admin/users',
+  authHandler,
+  rolesMiddleware(['admin']),
+  adminController.listUsers.bind(adminController)
+)
+router.post('/api/admin/users',
+  authHandler,
+  rolesMiddleware(['admin']),
+  adminController.createUser.bind(adminController)
+)
+router.patch('/api/admin/users/:id',
+  authHandler,
+  rolesMiddleware(['admin']),
+  adminController.updateUser.bind(adminController)
+)
+router.delete('/api/admin/users/:id',
+  authHandler,
+  rolesMiddleware(['admin']),
+  adminController.deleteUser.bind(adminController)
+)
 
 router.get('/info', (req, res) => {
   const serverTime = new Date().toISOString()
