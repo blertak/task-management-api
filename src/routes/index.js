@@ -32,6 +32,10 @@ router.post('/api/tasks',
   authHandler,
   taskController.createTask.bind(taskController)
 )
+router.get('/api/tasks/export',
+  authHandler,
+  taskController.exportTasks.bind(taskController)
+)
 router.get('/api/tasks/:id',
   authHandler,
   taskController.findTask.bind(taskController)
