@@ -46,7 +46,7 @@ const hashPassword = (password) => {
  * @returns {string|null}
  */
 const checkPasswordPolicy = (password) => {
-  const error = null
+  let error = null
   if (!(/\d/).test(password)) { error = 'Password must contain a number.' }
   if (!(/\w/).test(password)) { error = 'Password must contain a letter.' }
   if ((/[^a-zA-Z0-9_#!]/ig).test(password)) { error = 'Password must contain only numbers, letters and the followin chars: _#!' }

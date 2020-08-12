@@ -7,7 +7,7 @@ const schema = new db.Schema({
   role: { type: String, required: true, validate: /^(admin|user)$/ },
   password: { type: String, required: false },
   googleId: { type: String, required: false },
-  githubId: { type: String, required: false },
+  githubId: { type: String, required: false }
 })
 
 const User = db.model('User', schema)

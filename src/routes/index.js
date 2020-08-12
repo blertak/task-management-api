@@ -3,6 +3,7 @@
 const router = require('express').Router()
 const httpStatus = require('http-status-codes')
 const AuthController = require('../controllers/AuthController')
+const TaskController = require('../controllers/TaskController')
 const config = require('../config')
 
 const { passport, authHandler } = require('../middlewares/auth')
@@ -10,6 +11,7 @@ const rolesMiddleware = require('../middlewares/roles')
 const logger = require('../helpers/logger')
 
 const authController = new AuthController()
+const taskController = new TaskController()
 
 router.post('/api/auth/login', authController.login.bind(authController))
 router.post('/api/auth/register/admin', authController.registerAdmin.bind(authController))
@@ -26,7 +28,30 @@ router.get('/api/auth/github/callback',
   (req, res) => {
     res.redirect(`${config.OAUTH_REDIRECT_URL}/?oauthToken=${req.user.oauthToken}`)
   })
-
+router.post('/api/tasks',
+  authHandler,
+  taskController.createTask.bind(taskController)
+)
+router.get('/api/tasks/export',
+  authHandler,
+  taskController.exportTasks.bind(taskController)
+)
+router.get('/api/tasks/:id',
+  authHandler,
+  taskController.findTask.bind(taskController)
+)
+router.patch('/api/tasks/:id',
+  authHandler,
+  taskController.updateTask.bind(taskController)
+)
+router.delete('/api/tasks/:id',
+  authHandler,
+  taskController.deleteTask.bind(taskController)
+)
+router.get('/api/tasks',
+  authHandler,
+  taskController.listTasks.bind(taskController)
+)
 router.get('/api/auth/info/admin',
   authHandler,
   rolesMiddleware(['admin']),
