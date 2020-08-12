@@ -1,12 +1,10 @@
 'use strict'
 
 const httpStatus = require('http-status-codes')
+const HttpError = require('../models/HttpError')
 
 const handler = (req, res, next) => {
-  const err = new Error(httpStatus.getStatusText(httpStatus.NOT_FOUND))
-  err.statusCode = httpStatus.NOT_FOUND
-
-  return next(err)
+  return next(new HttpError(httpStatus.getStatusText(httpStatus.NOT_FOUND), httpStatus.NOT_FOUND))
 }
 
 module.exports = handler
