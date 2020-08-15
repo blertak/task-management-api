@@ -125,7 +125,7 @@ class UserService {
     return user
   }
 
-    /**
+  /**
    * @param {object} query
    * @returns {Promise<boolean>}
    */

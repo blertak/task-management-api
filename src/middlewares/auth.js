@@ -18,7 +18,7 @@ passport.use(new JwtStrategy({
   try {
     const { sub: id, iat: expire } = payload
 
-    if (Date.now() - expire > conf.JWT_EXPIRE * 1000) throw new Error('ERR_TOKEN_EXPIRED')
+    if (Date.now() - expire > conf.JWT_EXPIRE * 1000) throw new Error('ERR_AUTH_TOKEN_EXPIRED')
     const user = await userService.findById(id)
 
     return done(null, user)

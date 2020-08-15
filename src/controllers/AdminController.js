@@ -4,17 +4,14 @@ const _ = require('lodash')
 const httpStatus = require('http-status-codes')
 const UserService = require('../services/UserService')
 const HttpError = require('../models/HttpError')
-const util = require('../helpers/util')
-const config = require('../config')
-
-const PUBLIC_USER_FIELDS = ['email', '_id', 'role']
+const db = require('../helpers/db')
 
 class AdminController {
-  constructor() {
+  constructor () {
     this.service = new UserService()
   }
 
-  async listUsers(req, res, next) {
+  async listUsers (req, res, next) {
     try {
       const users = await this.service.listUsers()
       return res.status(httpStatus.OK).json(users)
@@ -23,7 +20,7 @@ class AdminController {
     }
   }
 
-  async findUser(req, res, next) {
+  async findUser (req, res, next) {
     try {
       const { id } = req.params
       const user = await this.service.findById(id)
@@ -34,12 +31,12 @@ class AdminController {
     }
   }
 
-  async createUser(req, res, next) {
+  async createUser (req, res, next) {
     try {
       const { email, role, password } = req.body
       const emailCount = await this.service.countUsers({ email })
 
-      if (emailCount > 0) throw new HttpError("ERR_EMAIL_IN_USE", httpStatus.BAD_REQUEST)
+      if (emailCount > 0) throw new HttpError('ERR_EMAIL_IN_USE', httpStatus.BAD_REQUEST)
 
       const user = await this.service.createUser({ email, role, password })
       return res.status(httpStatus.CREATED).json(user)
@@ -48,7 +45,7 @@ class AdminController {
     }
   }
 
-  async updateUser(req, res, next) {
+  async updateUser (req, res, next) {
     try {
       const { id } = req.params
 
@@ -62,7 +59,7 @@ class AdminController {
     }
   }
 
-  async deleteUser(req, res, next) {
+  async deleteUser (req, res, next) {
     try {
       const { id } = req.params
       const query = { _id: db.Types.ObjectId(id) }
