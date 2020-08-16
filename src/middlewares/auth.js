@@ -50,7 +50,7 @@ if (conf.GOOGLE_OAUTH_CLIENT_ID && conf.GOOGLE_OAUTH_CLIENT_SECRET) {
         await userService.updateUser(user._id, { googleId })
       } else {
         // create new user
-        user = userService.createUser(user)
+        user = await userService.createUser(user)
       }
 
       await userService.storeOAuthToken(`GOOGLE:${accessToken}`, user._id)
@@ -86,7 +86,7 @@ if (conf.GITHUB_OAUTH_CLIENT_ID && conf.GITHUB_OAUTH_CLIENT_SECRET) {
         await userService.updateUser(user._id, { githubId })
       } else {
         // create new user
-        user = userService.createUser(user)
+        user = await userService.createUser(user)
       }
 
       await userService.storeOAuthToken(`GITHUB:${accessToken}`, user._id)

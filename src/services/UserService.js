@@ -83,7 +83,7 @@ class UserService {
       fields.password = await util.hashPassword(fields.password)
     }
 
-    if (util.isNil(fields.password) && util.isNil(fields.googleId) && util.isNil(fields.githugId)) {
+    if (util.isNil(fields.password) && util.isNil(fields.googleId) && util.isNil(fields.githubId)) {
       throw new HttpError('ERR_INVALID_FIELDS: password or oauth id is required', httpStatus.BAD_REQUEST)
     }
 

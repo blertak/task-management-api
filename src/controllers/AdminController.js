@@ -53,7 +53,7 @@ class AdminController {
       if (!user) throw new HttpError('ERR_USER_NOT_FOUND', httpStatus.NOT_FOUND)
 
       const userUpdated = await this.service.updateUser(id, _.pick(req.body, ['email', 'role']))
-      return res.status(httpStatus.CREATED).json(userUpdated)
+      return res.status(httpStatus.OK).json(userUpdated)
     } catch (err) {
       next(err)
     }
@@ -64,7 +64,7 @@ class AdminController {
       const { id } = req.params
       const query = { _id: db.Types.ObjectId(id) }
 
-      const deleted = await this.service.deleteTask(query)
+      const deleted = await this.service.deleteUser(query)
       if (!deleted) throw new HttpError('ERR_USER_NOT_FOUND', httpStatus.NOT_FOUND)
 
       return res.status(httpStatus.OK).json()
