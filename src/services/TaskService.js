@@ -42,7 +42,7 @@ class TaskService {
    * @returns {Promise<Task[]>}
    */
   async listTasks (query = {}) {
-    const res = await TaskModel.find(query)
+    const res = await TaskModel.find(query).sort({ date: -1 })
     res.forEach(x => {
       x._id = x._id.toString()
       x.uid = x.uid.toString()

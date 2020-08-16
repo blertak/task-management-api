@@ -18,7 +18,7 @@ const adminController = new AdminController()
 router.post('/api/auth/login', authController.login.bind(authController))
 router.post('/api/auth/register/admin', authController.registerAdmin.bind(authController))
 router.post('/api/auth/register', authController.register.bind(authController))
-router.patch('/api/auth/update/password',  authHandler, authController.updateUserPassword.bind(authController))
+router.patch('/api/auth/update/password', authHandler, authController.updateUserPassword.bind(authController))
 router.get('/api/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 router.get('/api/auth/google/callback',
   passport.authenticate('google', { failureRedirect: `${config.OAUTH_REDIRECT_URL}?test=false`, session: false }),
