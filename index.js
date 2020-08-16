@@ -2,6 +2,7 @@
 
 const express = require('express')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 const config = require('./src/config')
 const logger = require('./src/helpers/logger')
@@ -15,6 +16,7 @@ let server
 const app = express()
 
 // server configs
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json({ strict: true }))
 app.use(passport.initialize())

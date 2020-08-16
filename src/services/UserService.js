@@ -47,6 +47,18 @@ class UserService {
   }
 
   /**
+   * @param {object} query
+   * @returns {Promise<User[]>}
+   */
+  async listUsers (query = {}) {
+    const res = await UserModel.find(query)
+    res.forEach(x => {
+      x._id = x._id.toString()
+    })
+    return res
+  }
+
+  /**
    * @param {object} fields
    * @param {string} fields.email
    * @param {string} fields.role
@@ -71,7 +83,7 @@ class UserService {
       fields.password = await util.hashPassword(fields.password)
     }
 
-    if (util.isNil(fields.password) && util.isNil(fields.googleId) && util.isNil(fields.githugId)) {
+    if (util.isNil(fields.password) && util.isNil(fields.googleId) && util.isNil(fields.githubId)) {
       throw new HttpError('ERR_INVALID_FIELDS: password or oauth id is required', httpStatus.BAD_REQUEST)
     }
 
@@ -90,7 +102,10 @@ class UserService {
    */
   async updateUser (id, fields) {
     const _id = db.Types.ObjectId(id)
-    fields = _.pick(fields, ['password', 'googleId', 'githubId'])
+    fields = _.pick(fields, ['email', 'role', 'password', 'googleId', 'githubId'])
+
+    if (!util.isNil(fields.email) && (!fields.email || typeof fields.email !== 'string')) throw new HttpError('ERR_INVALID_FIELDS: email', httpStatus.BAD_REQUEST)
+    if (!util.isNil(fields.role) && !['admin', 'user'].includes(fields.role)) throw new HttpError('ERR_INVALID_FIELDS: role', httpStatus.BAD_REQUEST)
 
     if (!util.isNil(fields.password) && (!fields.password || typeof fields.password !== 'string')) {
       throw new HttpError('ERR_INVALID_FIELDS: password', httpStatus.BAD_REQUEST)
@@ -103,9 +118,20 @@ class UserService {
       fields.password = await util.hashPassword(fields.password)
     }
 
-    const user = await UserModel.findByIdAndUpdate(_id, { $set: fields })
+    let user = await UserModel.findByIdAndUpdate(_id, { $set: fields })
     if (!user) throw new HttpError('ERR_USER_NOT_FOUND', httpStatus.NOT_FOUND)
+    user = _.assign(user, fields)
+    user._id = user._id.toString()
     return user
+  }
+
+  /**
+   * @param {object} query
+   * @returns {Promise<boolean>}
+   */
+  async deleteUser (query) {
+    const res = await UserModel.deleteOne(query)
+    return res.deletedCount === 1
   }
 
   /**

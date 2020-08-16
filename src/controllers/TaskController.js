@@ -38,8 +38,8 @@ class TaskController {
   async exportTasks (req, res, next) {
     try {
       const { from, to } = req.query
-      const fromDate = dateFns.format(new Date(from || 0), 'yyyy.MM.dd')
-      const toDate = dateFns.format(to ? new Date(to) : Date.now(), 'yyyy.MM.dd')
+      const fromDate = dateFns.format(new Date(from ? +from : 0), 'yyyy.MM.dd')
+      const toDate = dateFns.format(to ? new Date(+to) : Date.now(), 'yyyy.MM.dd')
 
       const tasks = await this._listTasks(req)
       const total = tasks.reduce((acc, curr) => acc + curr.duration, 0)

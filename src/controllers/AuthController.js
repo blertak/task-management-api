@@ -74,6 +74,15 @@ class UserController {
     }
   }
 
+  async updateUserPassword (req, res, next) {
+    try {
+      await this.service.updateUser(req.user._id, { password: req.body.password })
+      return res.status(httpStatus.OK).json()
+    } catch (err) {
+      next(err)
+    }
+  }
+
   async userInfo (req, res, next) {
     try {
       return res.status(httpStatus.OK).json(_.pick(req.user, PUBLIC_USER_FIELDS))
