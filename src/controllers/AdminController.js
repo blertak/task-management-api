@@ -14,7 +14,7 @@ class AdminController {
   async listUsers (req, res, next) {
     try {
       const users = await this.service.listUsers()
-      return res.status(httpStatus.OK).json(users)
+      return res.status(httpStatus.OK).json(users.map(u => _.pick(u, ['_id', 'email', 'role', 'githubId', 'googleId', '__v'])))
     } catch (err) {
       next(err)
     }
@@ -25,7 +25,7 @@ class AdminController {
       const { id } = req.params
       const user = await this.service.findById(id)
       if (!user) throw new HttpError('ERR_USER_NOT_FOUND', httpStatus.NOT_FOUND)
-      return res.status(httpStatus.OK).json(user)
+      return res.status(httpStatus.OK).json(_.pick(user, ['_id', 'email', 'role', 'githubId', 'googleId', '__v']))
     } catch (err) {
       next(err)
     }
@@ -39,7 +39,7 @@ class AdminController {
       if (emailCount > 0) throw new HttpError('ERR_EMAIL_IN_USE', httpStatus.BAD_REQUEST)
 
       const user = await this.service.createUser({ email, role, password })
-      return res.status(httpStatus.CREATED).json(user)
+      return res.status(httpStatus.CREATED).json(_.pick(user, ['_id', 'email', 'role', 'githubId', 'googleId', '__v']))
     } catch (err) {
       next(err)
     }
@@ -53,7 +53,7 @@ class AdminController {
       if (!user) throw new HttpError('ERR_USER_NOT_FOUND', httpStatus.NOT_FOUND)
 
       const userUpdated = await this.service.updateUser(id, _.pick(req.body, ['email', 'role']))
-      return res.status(httpStatus.OK).json(userUpdated)
+      return res.status(httpStatus.OK).json(_.pick(userUpdated, ['_id', 'email', 'role', 'githubId', 'googleId', '__v']))
     } catch (err) {
       next(err)
     }
